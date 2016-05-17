@@ -1,0 +1,10 @@
+c:\users\srram\documents\visual studio 2015\Projects\EventHub\EventHub\bin\Debug\EventHub.exe.config
+c:\users\srram\documents\visual studio 2015\Projects\EventHub\EventHub\bin\Debug\EventHub.exe
+c:\users\srram\documents\visual studio 2015\Projects\EventHub\EventHub\bin\Debug\EventHub.pdb
+c:\users\srram\documents\visual studio 2015\Projects\EventHub\EventHub\bin\Debug\Microsoft.ServiceBus.dll
+c:\users\srram\documents\visual studio 2015\Projects\EventHub\EventHub\bin\Debug\Microsoft.ServiceBus.xml
+c:\users\srram\documents\visual studio 2015\Projects\EventHub\EventHub\obj\Debug\EventHub.csprojResolveAssemblyReference.cache
+c:\users\srram\documents\visual studio 2015\Projects\EventHub\EventHub\obj\Debug\EventHub.exe
+c:\users\srram\documents\visual studio 2015\Projects\EventHub\EventHub\obj\Debug\EventHub.pdb
+c:\users\srram\documents\visual studio 2015\Projects\EventHub\EventHub\bin\Debug\Newtonsoft.Json.dll
+c:\users\srram\documents\visual studio 2015\Projects\EventHub\EventHub\bin\Debug\Newtonsoft.Json.xml

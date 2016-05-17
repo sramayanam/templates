@@ -1,0 +1,81 @@
+PowerBI Spark driver
+
+Microsoft® Spark ODBC Driver
+
+Streaming Parameters
+
+Map('policyKey -> t+9ic3EIvjc9OwfH6MoiqpoLjPuZ5q5tcj/cp+gQo6E=, 'eventhubsName -> srrameventhub-ns, 'policyName -> mysendpolicy, 'eventhubsNamespace -> srrameventhub-ns, 'messageCount -> -1, 'messageLength -> 32, 'threadCount -> 32)
+
+
+
+curl -k --user "admin:Lz8oq1dn$Lz1" -v -H "Content-Type: application/json" -X POST --data @C:\Users\srram\Desktop\spark\inputBlob.txt "https://srramspark.azurehdinsight.net/livy/batches"
+
+curl -k --user "admin:Lz8oq1dn$Lz1" -v -X DELETE "https://srramspark.azurehdinsight.net/livy/batches/0"
+
+curl -k --user "admin:Lz8oq1dn$Lz1" -v -X GET "https://srramspark.azurehdinsight.net/livy/batches/1"
+
+curl -k --user "admin:mypassword1!" -v -H "Content-Type: application/json" -X POST --data @C:\Temp\inputHive.txt "https://mysparkcluster.azurehdinsight.net/livy/batches"
+
+{ "file":"wasb:///example/jars/microsoft-spark-streaming-examples.jar", "className":"com.microsoft.spark.streaming.examples.workloads.EventhubsToHiveTable", "args":["--eventhubs-namespace", "mysbnamespace", "--eventhubs-name", "myeventhub", "--policy-name", "myreceivepolicy", "--policy-key", "<put-your-key-here>", "--consumer-group", "$default", "--partition-count", 10, "--batch-interval-in-seconds", 20, "--checkpoint-directory", "/EventCheckpoint", "--event-count-folder", "/EventCount/EventCount10", "--event-hive-table", "EventHiveTable10" ], "jars":["wasb:///example/jars/datanucleus-api-jdo-3.2.6.jar", "wasb:///example/jars/datanucleus-rdbms-3.2.9.jar", "wasb:///example/jars/datanucleus-core-3.2.10.jar"], "files":["wasb:///example/jars/hive-site.xml"], "numExecutors":20, "executorMemory":"1G", "executorCores":1, "driverMemory":"2G" }
+
+{ "file":"wasb:///example/jars/microsoft-spark-streaming-examples.jar", "className":"com.microsoft.spark.streaming.examples.workloads.EventhubsEventCount", "args":["--eventhubs-namespace", "srrameventhub-ns", "--eventhubs-name", "myeventhub", "--policy-name", "myreceivepolicy", "--policy-key", "RGnnYnO0y3p/5aI96kL8vPoqqNqn6+5gWVVC5xrkJXY=", "--consumer-group", "$default", "--partition-count", 10, "--batch-interval-in-seconds", 20, "--checkpoint-directory", "/EventCheckpoint", "--event-count-folder", "/EventCount/EventCount10"], "numExecutors":20, "executorMemory":"1G", "executorCores":1, "driverMemory":"2G" }
+
+{ "file":"wasb:///example/jars/microsoft-spark-streaming-examples.jar", "className":"com.microsoft.spark.streaming.examples.workloads.EventhubsToAzureBlobAsJSON", "args":["--eventhubs-namespace", "srrameventhub-ns", "--eventhubs-name", "myeventhub", "--policy-name", "myreceivepolicy", "--policy-key", "RGnnYnO0y3p/5aI96kL8vPoqqNqn6+5gWVVC5xrkJXY=", "--consumer-group", "$default", "--partition-count", 10, "--batch-interval-in-seconds", 20, "--checkpoint-directory", "/EventCheckpoint", "--event-count-folder", "/EventCount/EventCount10", "--event-store-folder", "/EventStore10"], "numExecutors":20, "executorMemory":"1G", "executorCores":1, "driverMemory":"2G" }
+
+{ "file":"wasb:///example/jars/microsoft-spark-streaming-examples.jar", "className":"com.microsoft.spark.streaming.examples.workloads.EventhubsToAzureBlobAsJSON", "args":["--eventhubs-namespace", "srrameventhub-ns", "--eventhubs-name", "myeventhub", "--policy-name", "myreceivepolicy", "--policy-key", "RGnnYnO0y3p/5aI96kL8vPoqqNqn6+5gWVVC5xrkJXY=", "--consumer-group", "$default", "--partition-count", 2, "--batch-interval-in-seconds", 60, "--checkpoint-directory", "/EventCheckpoint", "--event-count-folder", "/EventCount/EventCount10", "--event-store-folder", "/EventStore10"], "jars":["wasb:///example/jars/spark-streaming-eventhubs-example-1.6.0.2.4.1.0-327-jar-with-dependencies.jar"],"numExecutors":4, "executorMemory":"1G", "executorCores":1, "driverMemory":"2G" }
+
+{ "file":"wasb:///example/jars/microsoft-spark-streaming-examples.jar", "className":"com.microsoft.spark.streaming.examples.workloads.EventhubsToHiveTable", "args":["--eventhubs-namespace", "mysbnamespace", "--eventhubs-name", "myeventhub", "--policy-name", "myreceivepolicy", "--policy-key", "RGnnYnO0y3p/5aI96kL8vPoqqNqn6+5gWVVC5xrkJXY=", "--consumer-group", "$default", "--partition-count", 10, "--batch-interval-in-seconds", 20, "--checkpoint-directory", "/EventCheckpoint", "--event-count-folder", "/EventCount/EventCount10", "--event-hive-table", "EventHiveTable10" ], "jars":["wasb:///example/jars/datanucleus-api-jdo-3.2.6.jar", "wasb:///example/jars/datanucleus-rdbms-3.2.9.jar", "wasb:///example/jars/datanucleus-core-3.2.10.jar","wasb:///example/jars/spark-streaming-eventhubs-example-1.6.0.2.4.1.0-327-jar-with-dependencies.jar","wasb:///example/jars/sqljdbc42.jar"], "files":["wasb:///example/jars/hive-site.xml"], "numExecutors":20, "executorMemory":"1G", "executorCores":1, "driverMemory":"2G" }
+
+
+Jupyter Notebook sample code
+
+SELECT 
+date_format(substr(regexp_replace(b.genTmStamp,'T',' '),1,23),'YYYY-MM-dd HH') process_dt_hr,
+TelematicID,
+HiredInd,
+OdometerReading,
+SMReading,
+ARRAY(99.9,99.9),
+Olife,
+VehicleID,
+genTmStamp,
+get_json_object(a.eventcontent,'$.TPReadings[0]') LF,
+get_json_object(a.eventcontent,'$.TPReadings[1]') RF,
+get_json_object(a.eventcontent,'$.TPReadings[2]') LR,
+get_json_object(a.eventcontent,'$.TPReadings[3]') RR  
+FROM eventhivetable10 a 
+lateral view json_tuple(a.eventcontent, 'TelematicID', 'HiredInd', 'OdometerReading','TPReadings','SMReading','latlong','Olife','VehicleID','genTmStamp') b as TelematicID,HiredInd,OdometerReading,TPReadings,SMReading,latlong,Olife,VehicleID,genTmStamp
+WHERE
+date_format(substr(regexp_replace(b.genTmStamp,'T',' '),1,23),'YYYY-MM-dd HH:mm') >= date_format('2016-05-15 16:32','YYYY-MM-dd HH:mm')
+and HiredInd = 'false'
+;
+
+from pyspark.sql import *
+
+%%sql
+
+create external table stockspartitioned (  
+	Calendardate string,
+	Close DECIMAL(5,2),
+	Volume DECIMAL(10,2),
+	Open DECIMAL(5,2),
+	High DECIMAL(5,2),
+	Low DECIMAL(5,2),
+	Ticker string
+)
+partitioned by ( yearno int, monthno int)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
+LINES TERMINATED BY '10' 
+STORED AS TEXTFILE 
+LOCATION 'wasb://patitioned@storagefordemodfsrram.blob.core.windows.net/data/'
+
+%%sql
+ALTER TABLE stockspartitioned ADD PARTITION (yearno=2015,monthno=2)
+
+%%sql
+select ticker,calendardate,(high-low) variance from stockspartitioned where yearno=2015 and monthno=2
+
+
+{ "file":"wasb:///example/jars/microsoft-spark-streaming-examples.jar", "className":"com.microsoft.spark.streaming.examples.workloads.EventhubsToAzureBlobAsJSON", "args":["--eventhubs-namespace", "mysbnamespace", "--eventhubs-name", "myeventhub", "--policy-name", "myreceivepolicy", "--policy-key", "RGnnYnO0y3p/5aI96kL8vPoqqNqn6+5gWVVC5xrkJXY=", "--consumer-group", "$default", "--partition-count", 10, "--batch-interval-in-seconds", 20, "--checkpoint-directory", "/EventCheckpoint", "--event-count-folder", "/EventCount/EventCount10", "--event-store-folder", "/EventStore10"], "jars":["wasb:///example/jars/spark-streaming-eventhubs-example-1.6.0.2.4.1.0-327-jar-with-dependencies.jar"],"numExecutors":20, "executorMemory":"1G", "executorCores":1, "driverMemory":"2G" }
+
+{ "file":"wasb:///example/jars/microsoft-spark-streaming-examples.jar", "className":"com.microsoft.spark.streaming.examples.workloads.EventhubsToHiveTable", "args":["--eventhubs-namespace", "srrameventhub-ns", "--eventhubs-name", "myeventhub", "--policy-name", "myreceivepolicy", "--policy-key", "RGnnYnO0y3p/5aI96kL8vPoqqNqn6+5gWVVC5xrkJXY=", "--consumer-group", "$default", "--partition-count", 10, "--batch-interval-in-seconds", 20, "--checkpoint-directory", "/EventCheckpoint", "--event-count-folder", "/EventCount/EventCount10", "--event-hive-table", "EventHiveTable10" ], "jars":["wasb:///example/jars/datanucleus-api-jdo-3.2.6.jar", "wasb:///example/jars/datanucleus-rdbms-3.2.9.jar", "wasb:///example/jars/datanucleus-core-3.2.10.jar","wasb:///example/jars/spark-streaming-eventhubs-example-1.6.0.2.4.1.0-327-jar-with-dependencies.jar","wasb:///example/jars/sqljdbc42.jar"], "files":["wasb:///example/jars/hive-site.xml"], "numExecutors":20, "executorMemory":"1G", "executorCores":1, "driverMemory":"2G" }

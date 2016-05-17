@@ -1,0 +1,97 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "0.9.0.0",
+    "parameters": {
+        "clusterName": {
+            "type": "String",
+            "metadata": {
+                "description": "The name of the HDInsight cluster to create."
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "srramsparkstorage",
+            "apiVersion": "2015-05-01-preview",
+            "location": "southcentralus",
+            "properties": {
+                "accountType": "Standard_LRS"
+            }
+        },
+        {
+            "type": "Microsoft.HDInsight/clusters",
+            "name": "srramspark",
+            "apiVersion": "2015-03-01-preview",
+            "location": "southcentralus",
+            "properties": {
+                "clusterVersion": "3.4",
+                "osType": "Linux",
+                "tier": "Standard",
+                "clusterDefinition": {
+                    "kind": "spark",
+                    "configurations": {
+                        "gateway": {
+                            "restAuthCredential.isEnabled": true,
+                            "restAuthCredential.username": "admin",
+                            "restAuthCredential.password": "Lz8oq1dn$Lz1"
+                        },
+                      "core-site": {
+                        "fs.defaultFS": "wasb://srramspark@srramsparkstorage.blob.core.windows.net",
+                        "fs.azure.account.key.srramsparkstorage.blob.core.windows.net": "[listKeys('Microsoft.Storage/storageAccounts/srramsparkstorage', '2015-05-01-preview').key1]"
+                      }
+                    }
+                },
+                "computeProfile": {
+                    "roles": [
+                        {
+                            "name": "headnode",
+                            "minInstanceCount": 1,
+                            "targetInstanceCount": 2,
+                            "hardwareProfile": {
+                                "vmSize": "Standard_D3"
+                            },
+                            "osProfile": {
+                                "linuxOperatingSystemProfile": {
+                                    "username": "adminsrram",
+                                    "sshProfile": {
+                                        "publicKeys": [
+                                            {
+                                                "certificateData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIT5uJVmSzcLr6DOAynQwSNt29aAUP2r6jPfnRCBEuNYqH3o5nNGTNgpjKyLNU2fAMO6DHNaS8MkS1Y4gYosJMCB9Pt09jmLeJIzVbL0rUSFTTwpyMx2XeFT9CadRK+hg3QdJSvFnqvbjQqh/CR+/u7dTJlNNLWrLOlZdKRFz/TjzLSEz7Hn1TphYuUu1JmuVdN43XE+wsBaMfYsAo/MkwfMcZM0FFXMhk8HNFBSF/8/bmunlaS+W8D64Sy7RPbzaGHzfCxQeISU9xbevp5HzOpKBIU7kgUuYxQqWkAZ+xDm4veysc27VT8QqPeBPbQrfPqgZeUKUcwJd4YxGoOBAj root@demosrram.southcentralus.cloudapp.azure.com\n"
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "scriptActions": []
+                        },
+                        {
+                            "name": "workernode",
+                            "minInstanceCount": 1,
+                            "targetInstanceCount": 2,
+                            "hardwareProfile": {
+                                "vmSize": "Standard_D3"
+                            },
+                            "osProfile": {
+                                "linuxOperatingSystemProfile": {
+                                    "username": "adminsrram",
+                                    "sshProfile": {
+                                        "publicKeys": [
+                                            {
+                                                "certificateData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIT5uJVmSzcLr6DOAynQwSNt29aAUP2r6jPfnRCBEuNYqH3o5nNGTNgpjKyLNU2fAMO6DHNaS8MkS1Y4gYosJMCB9Pt09jmLeJIzVbL0rUSFTTwpyMx2XeFT9CadRK+hg3QdJSvFnqvbjQqh/CR+/u7dTJlNNLWrLOlZdKRFz/TjzLSEz7Hn1TphYuUu1JmuVdN43XE+wsBaMfYsAo/MkwfMcZM0FFXMhk8HNFBSF/8/bmunlaS+W8D64Sy7RPbzaGHzfCxQeISU9xbevp5HzOpKBIU7kgUuYxQqWkAZ+xDm4veysc27VT8QqPeBPbQrfPqgZeUKUcwJd4YxGoOBAj root@demosrram.southcentralus.cloudapp.azure.com\n"
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "scriptActions": []
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "Microsoft.Storage/storageAccounts/srramsparkstorage"
+            ]
+        }
+    ]
+}

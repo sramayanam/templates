@@ -1,0 +1,149 @@
+SELECT a.*,get_json_object(a.eventcontent,'$.TPReadings')  FROM eventhivetable10 a LIMIT 5;
+
+SELECT f1,f2,f3,f4,f5,f6,f7,f8,f9,get_json_object(a.eventcontent,'$.TPReadings[0]') LF,get_json_object(a.eventcontent,'$.TPReadings[1]') RF,get_json_object(a.eventcontent,'$.TPReadings[2]') LR,get_json_object(a.eventcontent,'$.TPReadings[3]') RR  
+FROM eventhivetable10 a 
+lateral view json_tuple(a.eventcontent, 'TelematicID', 'HiredInd', 'OdometerReading','TPReadings','SMReading','latlong','Olife','VehicleID','genTmStamp') b as f1, f2,f3,f4,f5,f6,f7,f8,f9
+LIMIT 5;
+
+SELECT TelematicID,HiredInd,OdometerReading,SMReading,latlong,Olife,VehicleID,genTmStamp,
+get_json_object(a.eventcontent,'$.TPReadings[0]') LF,
+get_json_object(a.eventcontent,'$.TPReadings[1]') RF,
+get_json_object(a.eventcontent,'$.TPReadings[2]') LR,
+get_json_object(a.eventcontent,'$.TPReadings[3]') RR  
+FROM eventhivetable10 a 
+lateral view json_tuple(a.eventcontent, 'TelematicID', 'HiredInd', 'OdometerReading','TPReadings','SMReading','latlong','Olife','VehicleID','genTmStamp') b as TelematicID,HiredInd,OdometerReading,TPReadings,SMReading,latlong,Olife,VehicleID,genTmStamp
+LIMIT 5;
+
+select f4
+from eventhivetable10 a 
+lateral view json_tuple(a.eventcontent, 'TelematicID', 'HiredInd', 'OdometerReading','TPReadings','SMReading','latlong','Olife','VehicleID','genTmStamp') b as f1, f2,f3,f4,f5,f6,f7,f8,f9 limit 5;
+
+{"TelematicID":"2ae992f8-0fe0-4374-ac94-0bcdacdfde82","HiredInd":false,"OdometerReading":107748,"TPReadings":[35.8,35.8,37.8,37.8],"SMReading":107.76959443128183,"latlong":[99.9,99.9],"Olife":78,"VehicleID":1,"genTmStamp":"2016-05-02T13:57:04.773662-05:00"}
+
+2016-05-02 13:57:04.773662-05:00
+
+SELECT date_format(substr(regexp_replace(b.genTmStamp,'T',' '),1,23),'YYYY-MM-dd HH:mm:ss.SSS') processdt,TelematicID,HiredInd,OdometerReading,SMReading,latlong,Olife,VehicleID,genTmStamp,
+get_json_object(a.eventcontent,'$.TPReadings[0]') LF,
+get_json_object(a.eventcontent,'$.TPReadings[1]') RF,
+get_json_object(a.eventcontent,'$.TPReadings[2]') LR,
+get_json_object(a.eventcontent,'$.TPReadings[3]') RR  
+FROM eventhivetable10 a 
+lateral view json_tuple(a.eventcontent, 'TelematicID', 'HiredInd', 'OdometerReading','TPReadings','SMReading','latlong','Olife','VehicleID','genTmStamp') b as TelematicID,HiredInd,OdometerReading,TPReadings,SMReading,latlong,Olife,VehicleID,genTmStamp
+WHERE
+date_format(substr(regexp_replace(b.genTmStamp,'T',' '),1,23),'YYYY-MM-dd HH') >= date_format('2016-05-02 11','YYYY-MM-dd HH')
+
+
+
+
+
+SELECT date_format(substr(regexp_replace(b.f1,'T',' '),1,23),'YYYY-MM-dd HH:mm:ss.SSS') processdt,date_format(from_utc_timestamp(current_timestamp,'CST'),'YYYY-MM-dd HH')
+FROM eventhivetable10 a 
+lateral view json_tuple(a.eventcontent,'genTmStamp') b as f1
+WHERE
+date_format(substr(regexp_replace(b.f1,'T',' '),1,23),'YYYY-MM-dd HH') >= date_format('2016-05-02 11','YYYY-MM-dd HH')
+
+
+
+2016-05-02 10:07:38.343,871a99ca-4c76-47de-b07c-6f755727c0d5,false,60352,60.43098423976031,[99.9,99.9],45,38,2016-05-02T10:07:38.3437026-05:00,33.4,33.4,35.4,35.4
+
+
+SELECT 
+date_format(substr(regexp_replace(b.genTmStamp,'T',' '),1,23),'YYYY-MM-dd HH:mm:ss.SSS') processdt,
+TelematicID,
+HiredInd,
+OdometerReading,
+SMReading,
+latlong,
+Olife,
+VehicleID,
+genTmStamp,
+get_json_object(a.eventcontent,'$.TPReadings[0]') LF,
+get_json_object(a.eventcontent,'$.TPReadings[1]') RF,
+get_json_object(a.eventcontent,'$.TPReadings[2]') LR,
+get_json_object(a.eventcontent,'$.TPReadings[3]') RR  
+FROM eventhivetable10 a 
+lateral view json_tuple(a.eventcontent, 'TelematicID', 'HiredInd', 'OdometerReading','TPReadings','SMReading','latlong','Olife','VehicleID','genTmStamp') b as TelematicID,HiredInd,OdometerReading,TPReadings,SMReading,latlong,Olife,VehicleID,genTmStamp
+WHERE
+date_format(substr(regexp_replace(b.genTmStamp,'T',' '),1,23),'YYYY-MM-dd HH') >= date_format('2016-05-02 11','YYYY-MM-dd HH')
+
+
+CREATE TABLE Batch_Report
+(
+TelematicID string,
+HiredInd string,
+OdometerReading int,
+SMReading Double,
+latlong Array<DOUBLE>,
+Olife int,
+VehicleID int,
+genTmStamp string,
+LF double,
+RF double,
+LR double,
+RR double 
+)
+--PARTITIONED BY (processdt string)
+STORED AS PARQUET;
+
+INSERT OVERWRITE TABLE Batch_Report
+SELECT 
+--substr(regexp_replace(b.genTmStamp,'T',' '),1,13) processdt,
+TelematicID,
+HiredInd,
+OdometerReading,
+SMReading,
+ARRAY(99.9,99.9),
+Olife,
+VehicleID,
+genTmStamp,
+get_json_object(a.eventcontent,'$.TPReadings[0]') LF,
+get_json_object(a.eventcontent,'$.TPReadings[1]') RF,
+get_json_object(a.eventcontent,'$.TPReadings[2]') LR,
+get_json_object(a.eventcontent,'$.TPReadings[3]') RR  
+FROM eventhivetable10 a 
+lateral view json_tuple(a.eventcontent, 'TelematicID', 'HiredInd', 'OdometerReading','TPReadings','SMReading','latlong','Olife','VehicleID','genTmStamp') b as TelematicID,HiredInd,OdometerReading,TPReadings,SMReading,latlong,Olife,VehicleID,genTmStamp
+WHERE
+date_format(substr(regexp_replace(b.genTmStamp,'T',' '),1,23),'YYYY-MM-dd HH') >= date_format('2016-05-02 11','YYYY-MM-dd HH')
+;
+
+
+
+
+SELECT 
+--substr(regexp_replace(b.genTmStamp,'T',' '),1,13) processdt,
+TelematicID,
+HiredInd,
+OdometerReading,
+SMReading,
+ARRAY(99.9,99.9),
+Olife,
+VehicleID,
+genTmStamp,
+get_json_object(a.eventcontent,'$.TPReadings[0]') LF,
+get_json_object(a.eventcontent,'$.TPReadings[1]') RF,
+get_json_object(a.eventcontent,'$.TPReadings[2]') LR,
+get_json_object(a.eventcontent,'$.TPReadings[3]') RR  
+FROM eventhivetable10 a 
+lateral view json_tuple(a.eventcontent, 'TelematicID', 'HiredInd', 'OdometerReading','TPReadings','SMReading','latlong','Olife','VehicleID','genTmStamp') b as TelematicID,HiredInd,OdometerReading,TPReadings,SMReading,latlong,Olife,VehicleID,genTmStamp
+WHERE
+date_format(substr(regexp_replace(b.genTmStamp,'T',' '),1,23),'YYYY-MM-dd HH:mm') >= date_format('2016-05-13 16:32','YYYY-MM-dd HH:mm')
+;
+
+
+
+processdt timestamp,
+TelematicID string,
+HiredInd string,
+OdometerReading int,
+SMReading Double,
+latlong Array,
+Olife int,
+VehicleID int,
+genTmStamp string,
+LF double,
+RF double,
+LR double,
+RR double 
+
+
+/usr/hdp/current/spark-client/conf
