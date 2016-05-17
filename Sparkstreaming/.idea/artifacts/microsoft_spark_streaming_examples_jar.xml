@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="microsoft-spark-streaming-examples:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/microsoft_spark_streaming_examples_jar</output-path>
+    <root id="archive" name="microsoft-spark-streaming-examples.jar">
+      <element id="module-output" name="microsoft-spark-streaming-examples" />
+    </root>
+  </artifact>
+</component>
